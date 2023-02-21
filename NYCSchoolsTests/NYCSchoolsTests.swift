@@ -6,9 +6,12 @@
 //
 
 import XCTest
+import Combine
 @testable import NYCSchools
 
 final class NYCSchoolsTests: XCTestCase {
+    
+    private var cancellables = Set<AnyCancellable>()
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -17,14 +20,10 @@ final class NYCSchoolsTests: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
     
+    override func setUp() async throws {
+        try await super.setUp()
+        cancellables.removeAll()
     }
     
     func testGettingSchoolsWithMockEmptyResult() {
@@ -37,12 +36,15 @@ final class NYCSchoolsTests: XCTestCase {
         let viewModel = SchoolsViewModel(apiService: mockAPI)
         
         // async operation inside the closure
-        viewModel.getSchools { schools, error in
-            XCTAssertTrue(schools?.isEmpty == true, "Expected schools to be empty, but received some values")
-            
-            // fulfill the expectation required for async operation
-            expectation.fulfill()
-        }
+        viewModel.getSchools()
+        // listening to the published schools variable
+        viewModel.$schools
+            .receive(on: RunLoop.main)
+            .sink { schools in
+                XCTAssertTrue(schools.isEmpty == true, "Expected schools to be empty, but received some values")
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
         
         // wait for fulfilling the expectation inside the closure to get done otherwise timeout occurs after 1.0 second
         waitForExpectations(timeout: 1.0) {error in
@@ -60,13 +62,16 @@ final class NYCSchoolsTests: XCTestCase {
         
         let viewModel = SchoolsViewModel(apiService: mockAPI)
         
-        viewModel.getSchools { schools, error in
-            XCTAssertTrue(schools == nil, "Expected to get no schools, but received schools")
-            XCTAssertNotNil(error, "Expected to get an error, but recieved no error")
-            
-            expectation.fulfill()
-        }
+        viewModel.getSchools()
         
+        viewModel.$error
+            .receive(on: RunLoop.main)
+            .sink { error in
+                XCTAssertNotNil(error, "Expected to get an error, but recieved no error")
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+                
         waitForExpectations(timeout: 1.0) {error in
             if let error = error {
                 XCTFail("Expectation failed \(error.localizedDescription)")
@@ -83,12 +88,15 @@ final class NYCSchoolsTests: XCTestCase {
         
         let viewModel = SchoolsViewModel(apiService: mockAPI)
         
-        viewModel.getSchools { schools, error in
-            XCTAssertTrue(schools?.isEmpty == false, "Expected to get schools")
-            XCTAssertNil(error, "Expected error to be nil")
-            
-            expectation.fulfill()
-        }
+        viewModel.getSchools()
+        
+        viewModel.$schools
+            .receive(on: RunLoop.main)
+            .sink { schools in
+                XCTAssertTrue(schools.isEmpty == false, "Expected to get schools")
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
         
         waitForExpectations(timeout: 1.0) {error in
             if let error = error {
