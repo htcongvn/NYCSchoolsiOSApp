@@ -1,20 +1,24 @@
 PODS:
   - Alamofire (5.4.1)
+  - MBProgressHUD (1.2.0)
   - PureLayout (3.1.9)
 
 DEPENDENCIES:
   - Alamofire
+  - MBProgressHUD
   - PureLayout
 
 SPEC REPOS:
   trunk:
     - Alamofire
+    - MBProgressHUD
     - PureLayout
 
 SPEC CHECKSUMS:
   Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   PureLayout: 5fb5e5429519627d60d079ccb1eaa7265ce7cf88
 
-PODFILE CHECKSUM: e60d76c34ebc17627647aecad26896186a689f2d
+PODFILE CHECKSUM: d7e10af38283eb904411fa83fde5544c72582e2d
 
 COCOAPODS: 1.11.3

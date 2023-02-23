@@ -9,6 +9,7 @@ target 'NYCSchools' do
   # pod 'SDWebImage', '~> 5.0'
   pod 'Alamofire'
   pod 'PureLayout'
+  pod 'MBProgressHUD'
 
   target 'NYCSchoolsTests' do
     inherit! :search_paths

@@ -9,14 +9,17 @@ import Foundation
 import Alamofire
 
 typealias SchoolListAPIResponse = (Swift.Result<[School]?, DataError>) -> Void
+typealias SchoolsSATAPIResponse = (Swift.Result<[SchoolSAT]?, DataError>) -> Void
 
 protocol SchoolAPILogic {
     func getSchools(completion: @escaping SchoolListAPIResponse)
+    func getSchoolSATResults(completion: @escaping SchoolsSATAPIResponse)
 }
 
 class SchoolAPI: SchoolAPILogic {
     private struct Constants {
         static let schoolListURL = "https://data.cityofnewyork.us/resource/s3k6-pzi2.json?$$app_token=L1KwLSwm1yz1N7aWqFCF4dLmM"
+        static let schoolsSATURL = "https://data.cityofnewyork.us/resource/f9bf-2cp4.json?$$app_token=L1KwLSwm1yz1N7aWqFCF4dLmM"
     }
     
     // have to get @escapte the closure because there is async call inside the closure
@@ -25,6 +28,9 @@ class SchoolAPI: SchoolAPILogic {
         // retrieveSchoolsUsingStdServices()
         
         // 2.Using Alamofire Library on Cocoapods
+        // this prevents AF retrieving cached responses
+        URLCache.shared.removeAllCachedResponses()
+        
         AF.request(Constants.schoolListURL)
             .validate() // ensure the status code back gets value of 200..299
             .responseDecodable(of: [School].self) { response in //get it decoded into School objects
@@ -37,6 +43,23 @@ class SchoolAPI: SchoolAPILogic {
             }
     }
     
+    func getSchoolSATResults(completion: @escaping SchoolsSATAPIResponse) {
+        // this prevents AF retrieving cached responses
+        URLCache.shared.removeAllCachedResponses()
+        
+        AF.request(Constants.schoolsSATURL)
+            .validate()
+            .responseDecodable(of: [SchoolSAT].self) { response in
+                switch response.result {
+                case .failure(let error):
+                    completion(.failure(.networkingError(error.localizedDescription)))
+                case .success(let schoolSATs):
+                    completion(.success(schoolSATs))
+                }
+            }
+    }
+    
+    // Using Apple Standard Services
     private func retrieveSchoolsUsingStdServices() {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
