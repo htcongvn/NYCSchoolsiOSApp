@@ -13,7 +13,7 @@ class SchoolsViewModel {
     // but can still be accessed from outside the class
     // Publishers declaration
     @Published private(set) var schools: [School]?
-    @Published var schoolSATs: [SchoolSAT]?
+    @Published private(set) var schoolSATs: [SchoolSAT]?
     @Published private(set) var error: DataError? = nil
     
     private(set) var schoolSectionsList: [SchoolSection]?
