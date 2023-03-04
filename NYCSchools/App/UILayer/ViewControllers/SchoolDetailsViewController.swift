@@ -8,12 +8,14 @@
 import Foundation
 import UIKit
 import PureLayout
+import CoreLocation
 
 class SchoolDetailsViewController: UIViewController {
     private var sectionsList: [String] = ["school.details.section".localized(),
                                           "school.details.sat.section".localized(),
                                           "school.details.map.section".localized()]
     private var collectionView: UICollectionView?
+    private let locationManager = CLLocationManager()
     
     var viewModel: SchoolDetailsViewModel?
     
@@ -33,6 +35,14 @@ class SchoolDetailsViewController: UIViewController {
         navigationItem.title = viewModel?.school.schoolName ?? ""
         view.backgroundColor = .white
         setupCollectionView()
+        setupLocationManager()
+    }
+    
+    private func setupLocationManager() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest // CLLocationAccuracy type
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
     }
     
     private func setupCollectionView() {
@@ -151,5 +161,19 @@ extension SchoolDetailsViewController: UICollectionViewDelegateFlowLayout {
             return CGSize(width: collectionView.bounds.width,
                           height: Constants.mapCellHeight)
         }
+    }
+}
+
+extension SchoolDetailsViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager,
+                         didUpdateLocations locations: [CLLocation]) {
+        guard let localtion = locations.last else {
+            print("Cannot get localtion!")
+            return }
+        print(localtion.coordinate.latitude)
+        print(localtion.coordinate.longitude)
+        
+        NotificationCenter.default.post(name: NSNotification.Name("UserLocationAvailable"),
+                                        object: localtion.coordinate)
     }
 }
