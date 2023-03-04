@@ -84,8 +84,8 @@ class SchoolDetailsMapCollectionViewCell: UICollectionViewCell {
             
             mapView.addAnnotation(annotation)
             
-            // Zoom down to 3000m from the center coordinates
-            if let regionMeters = CLLocationDistance(exactly: 3000) {
+            // Zoom down to 6000m from the center coordinates
+            if let regionMeters = CLLocationDistance(exactly: 6000) {
                 let region = MKCoordinateRegion(center: coordinates,
                                                 latitudinalMeters: regionMeters, longitudinalMeters: regionMeters)
                 mapView.setRegion(mapView.regionThatFits(region), animated: true)
