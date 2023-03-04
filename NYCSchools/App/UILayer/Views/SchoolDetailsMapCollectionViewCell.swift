@@ -32,7 +32,7 @@ class SchoolDetailsMapCollectionViewCell: UICollectionViewCell {
     }()
     
     private var wrapperView: UIView = {
-        let view = UIView(forAutoLayout: <#T##()#>)
+        let view = UIView(forAutoLayout: ())
         view.layer.borderColor = UIColor.gray.cgColor
         view.layer.borderWidth = Constants.borderWidth
         view.layer.cornerRadius = Constants.cornerRadius
