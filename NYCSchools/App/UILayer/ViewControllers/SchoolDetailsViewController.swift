@@ -11,7 +11,8 @@ import PureLayout
 
 class SchoolDetailsViewController: UIViewController {
     private var sectionsList: [String] = ["school.details.section".localized(),
-                                          "school.details.sat.section".localized()]
+                                          "school.details.sat.section".localized(),
+                                          "school.details.map.section".localized()]
     private var collectionView: UICollectionView?
     
     var viewModel: SchoolDetailsViewModel?
@@ -23,6 +24,8 @@ class SchoolDetailsViewController: UIViewController {
         static let sectionHeight: CGFloat = 50
         static let schoolSATCellIdentifier: String = "schoolSATDetailsCell"
         static let satCellHeight: CGFloat = 180
+        static let schoolMapDetailsCellIdentifier: String = "schoolMapDetailsCell"
+        static let mapCellHeight: CGFloat = 250
     }
     
     override func viewDidLoad() {
@@ -51,13 +54,13 @@ class SchoolDetailsViewController: UIViewController {
         collectionView.backgroundColor = .white
         collectionView.alwaysBounceVertical = true
         
-        //setup & customize flow layout
+        //setup & customize CollectionViewFlowLayout
         collectionView.register(SchoolDetailsCollectionViewCell.self,
                                 forCellWithReuseIdentifier: Constants.schoolDetailsCellIdentifier)
-        
         collectionView.register(SchoolSATDetailsCollectionViewCell.self,
                                 forCellWithReuseIdentifier: Constants.schoolSATCellIdentifier)
-        
+        collectionView.register(SchoolDetailsMapCollectionViewCell.self,
+                                forCellWithReuseIdentifier: Constants.schoolMapDetailsCellIdentifier)
         collectionView.register(SchoolSectionHeaderView.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: Constants.sectionHeaderIdentifier)
@@ -65,7 +68,6 @@ class SchoolDetailsViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
     }
-    
 }
 
 extension SchoolDetailsViewController: UICollectionViewDataSource {
@@ -75,13 +77,14 @@ extension SchoolDetailsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
+        // for now we have only 1 cell per section
         return 1
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
-        case 0: // details cell
+        case 0: // school details cell configuration
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.schoolDetailsCellIdentifier,
                                                           for: indexPath)
             guard let schoolDetailsCell = cell as? SchoolDetailsCollectionViewCell,
@@ -90,7 +93,7 @@ extension SchoolDetailsViewController: UICollectionViewDataSource {
             }
             schoolDetailsCell.populate(school: school)
             return schoolDetailsCell
-        case 1: // sat cell
+        case 1: // sat cell configuration
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.schoolSATCellIdentifier,
                                                           for: indexPath)
             guard let schoolSATCell = cell as? SchoolSATDetailsCollectionViewCell,
@@ -99,8 +102,17 @@ extension SchoolDetailsViewController: UICollectionViewDataSource {
             }
             schoolSATCell.populate(schoolSAT: schoolSAT)
             return schoolSATCell
+        case 2: // map cell configuration
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.schoolMapDetailsCellIdentifier,
+                                                          for: indexPath)
+            guard let schoolMapCell = cell as? SchoolDetailsMapCollectionViewCell,
+                  let school = viewModel?.school else {
+                return cell
+            }
+            schoolMapCell.populate(school: school)
+            return schoolMapCell
         default:
-            // generic view cell
+            // generic view cell configuration
             return UICollectionViewCell()
         }
     }
@@ -108,7 +120,7 @@ extension SchoolDetailsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,
                         viewForSupplementaryElementOfKind kind: String,
                         at indexPath: IndexPath) -> UICollectionReusableView {
-        // section header element
+        // SchoolSectionHeaderView - section header element configuration
         if kind == UICollectionView.elementKindSectionHeader,
             let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
                                                                                 withReuseIdentifier: Constants.sectionHeaderIdentifier,
@@ -116,13 +128,14 @@ extension SchoolDetailsViewController: UICollectionViewDataSource {
             sectionHeader.headerLabel.text = sectionsList[indexPath.section]
             return sectionHeader
         }
+        // generic UICollectionReusableView configuration
         return UICollectionReusableView()
     }
 }
 
 extension SchoolDetailsViewController: UICollectionViewDelegate {}
 
-// cell size
+// cells' size configuration
 extension SchoolDetailsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -131,10 +144,12 @@ extension SchoolDetailsViewController: UICollectionViewDelegateFlowLayout {
         case 0: // details cell size
             return CGSize(width: collectionView.bounds.width,
                           height: Constants.detailsCellHeight)
-        default: // sat cell size
+        case 1: // sat cell size
             return CGSize(width: collectionView.bounds.width,
                           height: Constants.satCellHeight)
+        default:
+            return CGSize(width: collectionView.bounds.width,
+                          height: Constants.mapCellHeight)
         }
-        
     }
 }

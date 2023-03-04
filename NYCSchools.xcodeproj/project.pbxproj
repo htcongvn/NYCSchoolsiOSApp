@@ -19,6 +19,10 @@
 		C5684FE1299F773000FE169A /* NYCSchoolsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5684FE0299F773000FE169A /* NYCSchoolsTests.swift */; };
 		C5684FEB299F773000FE169A /* NYCSchoolsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5684FEA299F773000FE169A /* NYCSchoolsUITests.swift */; };
 		C5684FED299F773000FE169A /* NYCSchoolsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5684FEC299F773000FE169A /* NYCSchoolsUITestsLaunchTests.swift */; };
+		C59A19C329B2CB4A00D1AA7C /* SchoolDetailsMapCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59A19C229B2CB4A00D1AA7C /* SchoolDetailsMapCollectionViewCell.swift */; };
+		C59A19C429B2CB4A00D1AA7C /* SchoolDetailsMapCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59A19C229B2CB4A00D1AA7C /* SchoolDetailsMapCollectionViewCell.swift */; };
+		C59A19C629B2DC2A00D1AA7C /* SchoolMapAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59A19C529B2DC2A00D1AA7C /* SchoolMapAnnotation.swift */; };
+		C59A19C729B2DC2A00D1AA7C /* SchoolMapAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59A19C529B2DC2A00D1AA7C /* SchoolMapAnnotation.swift */; };
 		C59F168829A08AF90094F711 /* SchoolDirectoryAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59F168729A08AF90094F711 /* SchoolDirectoryAPI.swift */; };
 		C59F168A29A08FCC0094F711 /* DataError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59F168929A08FCC0094F711 /* DataError.swift */; };
 		C59F168D29A0944E0094F711 /* School.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59F168C29A0944E0094F711 /* School.swift */; };
@@ -79,6 +83,8 @@
 		C5684FE6299F773000FE169A /* NYCSchoolsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NYCSchoolsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C5684FEA299F773000FE169A /* NYCSchoolsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NYCSchoolsUITests.swift; sourceTree = "<group>"; };
 		C5684FEC299F773000FE169A /* NYCSchoolsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NYCSchoolsUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		C59A19C229B2CB4A00D1AA7C /* SchoolDetailsMapCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchoolDetailsMapCollectionViewCell.swift; sourceTree = "<group>"; };
+		C59A19C529B2DC2A00D1AA7C /* SchoolMapAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchoolMapAnnotation.swift; sourceTree = "<group>"; };
 		C59F168729A08AF90094F711 /* SchoolDirectoryAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchoolDirectoryAPI.swift; sourceTree = "<group>"; };
 		C59F168929A08FCC0094F711 /* DataError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataError.swift; sourceTree = "<group>"; };
 		C59F168C29A0944E0094F711 /* School.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = School.swift; sourceTree = "<group>"; };
@@ -255,6 +261,7 @@
 				C59F16AC29A5E5AE0094F711 /* SchoolDetailsCollectionViewCell.swift */,
 				C59F16AE29A5F94D0094F711 /* SchoolsListStateView.swift */,
 				C59F16B429A6D26A0094F711 /* SchoolSATDetailsCollectionViewCell.swift */,
+				C59A19C229B2CB4A00D1AA7C /* SchoolDetailsMapCollectionViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -309,6 +316,7 @@
 			isa = PBXGroup;
 			children = (
 				C59F169E29A59B9C0094F711 /* SchoolSection.swift */,
+				C59A19C529B2DC2A00D1AA7C /* SchoolMapAnnotation.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -577,11 +585,13 @@
 				C59F169A29A4B0540094F711 /* StringsHelper.swift in Sources */,
 				C59F16AF29A5F94D0094F711 /* SchoolsListStateView.swift in Sources */,
 				C59F169C29A55DBF0094F711 /* SchoolCollectionViewCell.swift in Sources */,
+				C59A19C329B2CB4A00D1AA7C /* SchoolDetailsMapCollectionViewCell.swift in Sources */,
 				C59F169429A3429A0094F711 /* SchoolListLoadState.swift in Sources */,
 				C59F16AD29A5E5AE0094F711 /* SchoolDetailsCollectionViewCell.swift in Sources */,
 				C59F168829A08AF90094F711 /* SchoolDirectoryAPI.swift in Sources */,
 				C59F16AB29A5E06A0094F711 /* SchoolDetailsViewModel.swift in Sources */,
 				C59F16B129A6CA0B0094F711 /* SchoolSAT.swift in Sources */,
+				C59A19C629B2DC2A00D1AA7C /* SchoolMapAnnotation.swift in Sources */,
 				C5684FCC299F772E00FE169A /* SceneDelegate.swift in Sources */,
 				C59F169F29A59B9C0094F711 /* SchoolSection.swift in Sources */,
 			);
@@ -592,7 +602,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C59F169229A341D80094F711 /* MockSchoolAPI.swift in Sources */,
+				C59A19C729B2DC2A00D1AA7C /* SchoolMapAnnotation.swift in Sources */,
 				C5684FE1299F773000FE169A /* NYCSchoolsTests.swift in Sources */,
+				C59A19C429B2CB4A00D1AA7C /* SchoolDetailsMapCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
