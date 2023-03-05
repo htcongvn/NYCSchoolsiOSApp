@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import PureLayout
+//import PureLayout
 import MapKit
 
 class SchoolDetailsMapCollectionViewCell: UICollectionViewCell {
@@ -39,6 +39,8 @@ class SchoolDetailsMapCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
+    private var currentUserLocationAnnotation: SchoolMapAnnotation? = nil;
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
@@ -63,6 +65,29 @@ class SchoolDetailsMapCollectionViewCell: UICollectionViewCell {
         mapView.delegate = self
         // It's not going to be visible outside of the boundaries
         wrapperView.clipsToBounds = true
+        
+        // Register MapCollectionViewCell itself to the NotificationCenter for listening to the specified event
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(listenToUserLocation),
+                                               name: NSNotification.Name(SchoolDetailsViewController.Constants.locationUpdateNotification),
+                                               object: nil)
+    }
+    
+    @objc func listenToUserLocation(_ notification: Notification) {
+        // get the payload userInfo
+        print(notification.userInfo as Any)
+        
+        guard let userCoordinateLocation = notification.userInfo?[SchoolDetailsViewController.Constants.userLocaltion] as? CLLocation else { return }
+        if (currentUserLocationAnnotation == nil) {
+            currentUserLocationAnnotation = SchoolMapAnnotation(title: "You",
+                                                                coordinate: userCoordinateLocation.coordinate,
+                                                                subtitle: "Current Location")
+            if let annotation = currentUserLocationAnnotation {
+                mapView.addAnnotation(annotation)
+            }
+        } else {
+            currentUserLocationAnnotation?.coordinate = userCoordinateLocation.coordinate
+        }
     }
     
     func populate(school: School) -> Void {

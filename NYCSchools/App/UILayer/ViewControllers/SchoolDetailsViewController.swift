@@ -19,7 +19,7 @@ class SchoolDetailsViewController: UIViewController {
     
     var viewModel: SchoolDetailsViewModel?
     
-    private struct Constants {
+    struct Constants {
         static let schoolDetailsCellIdentifier: String = "schoolDetailsCell"
         static let detailsCellHeight: CGFloat = 360
         static let sectionHeaderIdentifier: String = "sectionHeader"
@@ -28,6 +28,8 @@ class SchoolDetailsViewController: UIViewController {
         static let satCellHeight: CGFloat = 180
         static let schoolMapDetailsCellIdentifier: String = "schoolMapDetailsCell"
         static let mapCellHeight: CGFloat = 250
+        static let locationUpdateNotification = "UserLocationAvailable"
+        static let userLocaltion = "userLocation"
     }
     
     override func viewDidLoad() {
@@ -168,12 +170,15 @@ extension SchoolDetailsViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager,
                          didUpdateLocations locations: [CLLocation]) {
         guard let localtion = locations.last else {
-            print("Cannot get localtion!")
+            print("Didn't get localtion!")
             return }
         print(localtion.coordinate.latitude)
         print(localtion.coordinate.longitude)
-        
-        NotificationCenter.default.post(name: NSNotification.Name("UserLocationAvailable"),
-                                        object: localtion.coordinate)
+        // Get the instance of NotificationCenter.default to post an event with the custom payload userInfo, which can simply be a dictionary
+        // Any suscribers/observer registered to the NotificationCenter with the name specified as Constants.locationUpdateNotification
+        // would be able to listen to and receive the event with the payload of userInfo.
+        NotificationCenter.default.post(name: NSNotification.Name(Constants.locationUpdateNotification),
+                                        object: nil,
+                                        userInfo: [Constants.userLocaltion : localtion])
     }
 }
