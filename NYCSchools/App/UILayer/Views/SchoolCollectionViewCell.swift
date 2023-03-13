@@ -110,7 +110,7 @@ class SchoolCollectionViewCell: UICollectionViewCell {
                                withInset: Constants.leftInset)
         emailLabel.autoPinEdge(toSuperviewEdge: .trailing,
                                withInset: Constants.rightInset)
-        cityLabel.autoPinEdge(.top,
+        emailLabel.autoPinEdge(.top,
                               to: .bottom,
                               of: cityLabel,
                               withOffset: Constants.topInset)

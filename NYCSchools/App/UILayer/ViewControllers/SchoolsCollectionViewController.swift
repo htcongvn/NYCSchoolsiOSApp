@@ -98,10 +98,19 @@ class SchoolsCollectionViewController: UIViewController {
     }
     
     private func setupBinders() {
-        // Subscribers which are listening to the Zip of publishers $schools and $schoolSATs
+        // Subscribers which are listening to the Zip of publishers $schools and $schoolSATs.
+        // When we use a custom publisher to announce that our object has changed, this must happen on the main thread.
+        // We can use Combine to et up custom data flows and get the declarative data bindings between object’s
+        // published properties (of SchoolsViewModel object) to the UI (SchoolsCollectionViewController) by subscribing
+        // (using .sink) to any observable object’s publisher or custom publisher - the properties themselves - directly
+        // via accessing the @Published property wrapper’s projected value (by prefixing its name with $
+        // ($schools, $schoolSATs, $error),
+        // and then update our UI accordingly like cancellable = viewModel.$schools.sink { newValueOfschools in {}} or
+        // Publishers.Zip(schoolsViewModel.$schools,schoolsViewModel.$schoolSATs).sink { newValueOfpublishers in {} }
+        //
         Publishers.Zip(schoolsViewModel.$schools,
                        schoolsViewModel.$schoolSATs)
-            .receive(on: RunLoop.main)
+            .receive(on: RunLoop.main) // ensure the data change announcement happens on the main thread
             .sink { [weak self] publishers in
                 let schools = publishers.0
                 let sats = publishers.1 // don't care
@@ -116,7 +125,7 @@ class SchoolsCollectionViewController: UIViewController {
                 
                 if self.schoolsViewModel.schools?.isEmpty == false { // sats can be nill
                     print("retrieved \(schools?.count ?? 0) schools, \(sats?.count ?? 0) sat results")
-                    self.collectionView?.reloadData()
+                    self.collectionView?.reloadData() // re-render the collectionView
                     
                     
                 } else {
@@ -124,6 +133,7 @@ class SchoolsCollectionViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
+        // We need to keep track of the cancellable object that Combine returns when we start our subscription using sink, since that subscription will only remain valid for as long as the returned AnyCancellable instance is retained.
         
         // Subscriber which is listening to publisher $error
         schoolsViewModel.$error
